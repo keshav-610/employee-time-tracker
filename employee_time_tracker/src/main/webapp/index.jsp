@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h2>Task Tracker</h2>
-	<a href="login.jsp">Admin</a>
+	<a href="admin_login.jsp">Admin</a>
 	<a href="employee.jsp">Employee</a>
 </body>
 </html>
