@@ -48,13 +48,13 @@
                     datasets: [{
                         data: Object.values(data).map(d => d / 3600),
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',  // Color for "Checking"
-                            'rgba(54, 162, 235, 0.2)',  // Color for "Coding"
-                            'rgba(255, 206, 86, 0.2)',  // Color for "Production"
-                            'rgba(75, 192, 192, 0.2)',  // Color for "Testing"
-                            'rgba(153, 102, 255, 0.2)', // Color for "Meeting"
-                            'rgba(255, 159, 64, 0.2)',  // Color for "Designing"
-                            'rgba(201, 203, 207, 0.2)'  // Color for "Debugging"
+                            'rgba(255, 99, 132, 0.2)',  
+                            'rgba(54, 162, 235, 0.2)',  
+                            'rgba(255, 206, 86, 0.2)',  
+                            'rgba(75, 192, 192, 0.2)',  
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',  
+                            'rgba(201, 203, 207, 0.2)'  
                         ],
                         borderColor: [
                             'rgba(255, 99, 132, 1)',
