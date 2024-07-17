@@ -30,7 +30,7 @@
     </div>
     <div class="account-login">
         <h2>Account Login</h2>
-        <form action="login" method="post"> <!-- Add appropriate action -->
+        <form action="login" method="post">
             <label for="employee-id">Enter your Employee ID</label>
             <input type="text" name="employee-id" required/><br><br>       
             
