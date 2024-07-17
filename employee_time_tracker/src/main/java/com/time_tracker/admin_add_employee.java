@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,14 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class registration_servlet
+ * Servlet implementation class admin_add_employee
  */
-@WebServlet("/register")
-public class registration_servlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String emp_name = request.getParameter("name");
+@WebServlet("/admin_add_emp")
+public class admin_add_employee extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String emp_name = request.getParameter("name");
         int age = Integer.parseInt(request.getParameter("age"));
         String role = request.getParameter("employee_role");
         String phone_number = request.getParameter("phone_number");
@@ -40,7 +40,7 @@ public class registration_servlet extends HttpServlet {
             con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/time_tracker", "root", "keshav610");
             pst = con1.prepareStatement("INSERT INTO employee_table (emp_id, emp_name, age, role, phone_number, email, password, emp_password) VALUES(?,?,?,?,?,?,?,?)");
 
-            pst.setInt(1, emp_id);
+            pst.setInt(1, emp_id); 
             pst.setString(2, emp_name);
             pst.setInt(3, age);
             pst.setString(4, role);
@@ -50,7 +50,7 @@ public class registration_servlet extends HttpServlet {
             pst.setString(8, emp_password);
 
             int rowcount = pst.executeUpdate();
-            dispatcher = request.getRequestDispatcher("login.jsp");
+            dispatcher = request.getRequestDispatcher("admin_home.jsp");
             if (rowcount > 0) {
                 request.setAttribute("status", "success");
             } else {
@@ -61,7 +61,7 @@ public class registration_servlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("status", "exception: " + e.getMessage());
-            dispatcher = request.getRequestDispatcher("employee.jsp");
+            dispatcher = request.getRequestDispatcher("admin_home.jsp");
             dispatcher.forward(request, response);
         } finally {
             if (pst != null) {
@@ -79,13 +79,14 @@ public class registration_servlet extends HttpServlet {
                 }
             }
         }
-    }
-
+        
+	}
     private int generate_employee_id() {
-        return new Random().nextInt(99999999); // Changed to int
+        return new Random().nextInt(99999999); 
     }
 
     private String generate_employee_password() {
         return String.valueOf(new Random().nextInt(999999));
+    
     }
 }
