@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Task Duration Pie Chart</title>
+<title>Task Duration Charts</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -40,6 +40,11 @@
         text-align: center;
         margin-top: 20px;
     }
+    .graph_and_pie{
+    	display:flex;
+    	justify-content:center;
+    
+    }
 </style>
 </head>
 <body>
@@ -58,8 +63,13 @@
     <a href="delete-task.jsp">Delete Task</a>
 </div>
 
+<div class="graph_and_pie">
 <div class="chart-container">
-    <canvas id="taskPieChart" width="100" height="100"></canvas>
+    <canvas id="taskPieChart" width="200" height="200"></canvas>
+</div>
+<div class="chart-container">
+    <canvas id="taskBarChart" width="300" height="200"></canvas>
+</div>
 </div>
 <div id="totalDuration"></div>
 
@@ -71,7 +81,7 @@
             .then(data => {
                 console.log(data);
                 if (data.error) {
-                    console.error(data.error);
+                    console.error('Error fetching pie data:', data.error);
                     return;
                 }
 
@@ -79,8 +89,8 @@
                 const totalDurationInHours = totalDurationInSeconds / 3600;
                 document.getElementById('totalDuration').innerText = 'Total Duration: ' + totalDurationInHours.toFixed(2) + ' hours';
 
-                const ctx = document.getElementById('taskPieChart').getContext('2d');
-                const chartData = {
+                const ctxPie = document.getElementById('taskPieChart').getContext('2d');
+                const chartDataPie = {
                     labels: Object.keys(data),
                     datasets: [{
                         data: Object.values(data).map(d => d / 3600),
@@ -105,9 +115,9 @@
                         borderWidth: 1
                     }]
                 };
-                const config = {
+                const configPie = {
                     type: 'pie',
-                    data: chartData,
+                    data: chartDataPie,
                     options: {
                         responsive: true,
                         plugins: {
@@ -116,7 +126,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Your Total Progress'
+                                text: 'Your Total Progress (Pie Chart)'
                             },
                             tooltip: {
                                 callbacks: {
@@ -130,9 +140,67 @@
                     },
                 };
 
-                new Chart(ctx, config);
+                new Chart(ctxPie, configPie);
             })
-            .catch(error => console.error('Error fetching task data:', error));
+            .catch(error => console.error('Error fetching pie data:', error));
+
+        fetch('GetLast5DaysData')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.error) {
+                console.error('Error fetching bar data:', data.error);
+                return;
+            }
+
+            const ctxBar = document.getElementById('taskBarChart').getContext('2d');
+            const chartDataBar = {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: 'Hours worked per day (last 5 days)',
+                    data: Object.values(data).map(d => d / 3600),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+            const configBar = {
+                type: 'bar',
+                data: chartDataBar,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Hours'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Hours worked per day (Bar Chart)'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const value = tooltipItem.raw;
+                                    return value.toFixed(2) + ' hours';
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctxBar, configBar);
+        })
+        .catch(error => console.error('Error fetching bar data:', error));
     });
 </script>
 </body>
