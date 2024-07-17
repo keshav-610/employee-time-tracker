@@ -44,7 +44,7 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         width: 100%;
         margin-top: 20px;
-        max-width: 600px; /* Limit width for better readability */
+        max-width: 600px; 
     }
     
     .container form {
