@@ -87,7 +87,7 @@
 
                 const totalDurationInSeconds = Object.values(data).reduce((acc, curr) => acc + curr, 0);
                 const totalDurationInHours = totalDurationInSeconds / 3600;
-                document.getElementById('totalDuration').innerText = 'Total Duration: ' + totalDurationInHours.toFixed(2) + ' hours';
+                document.getElementById('totalDuration').innerText = 'Total Hours Worked : ' + totalDurationInHours.toFixed(2) + ' hours';
 
                 const ctxPie = document.getElementById('taskPieChart').getContext('2d');
                 const chartDataPie = {
@@ -153,17 +153,20 @@
                 return;
             }
 
+            const sortedData = Object.entries(data).sort((a, b) => new Date(a[0]) - new Date(b[0]));
+
             const ctxBar = document.getElementById('taskBarChart').getContext('2d');
             const chartDataBar = {
-                labels: Object.keys(data),
+                labels: sortedData.map(entry => entry[0]), 
                 datasets: [{
                     label: 'Hours worked per day (last 5 days)',
-                    data: Object.values(data).map(d => d / 3600),
+                    data: sortedData.map(entry => entry[1] / 3600), 
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 }]
             };
+
             const configBar = {
                 type: 'bar',
                 data: chartDataBar,
@@ -201,6 +204,7 @@
             new Chart(ctxBar, configBar);
         })
         .catch(error => console.error('Error fetching bar data:', error));
+
     });
 </script>
 </body>

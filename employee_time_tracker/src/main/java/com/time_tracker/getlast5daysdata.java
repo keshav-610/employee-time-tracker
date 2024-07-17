@@ -38,9 +38,13 @@ public class getlast5daysdata extends HttpServlet {
                     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/time_tracker", "root",
                             "keshav610");
 
-                    String query = "SELECT DATE(task_date) as task_date, SUM(TIME_TO_SEC(duration)) AS total_duration "
-                            + "FROM task_table " + "WHERE task_date >= CURDATE() - INTERVAL 5 DAY " + "AND emp_name = ? "
-                            + "GROUP BY DATE(task_date)";
+                    String query = "SELECT DATE(task_date) AS task_date, SUM(TIME_TO_SEC(duration)) AS total_duration "
+                            + "FROM task_table "
+                            + "WHERE task_date >= CURDATE() - INTERVAL 5 DAY "
+                            + "AND emp_name = ? "
+                            + "GROUP BY DATE(task_date) "
+                            + "ORDER BY DATE(task_date) ASC"; 
+
 
                     PreparedStatement pst = con.prepareStatement(query);
                     pst.setString(1, employeeName);
