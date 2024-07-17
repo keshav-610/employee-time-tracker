@@ -1,10 +1,46 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Task Duration Pie Chart</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .header {
+        background-color: #343a40;
+        color: #ffffff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .operation {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .operation a {
+        color: #007bff;
+        margin: 0 10px;
+        text-decoration: none;
+    }
+
+    .chart-container {
+        width: 40%;
+        margin: auto;
+        text-align: center;
+    }
+
+    #totalDuration {
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
 </head>
 <body>
 <div class="header">
@@ -22,11 +58,12 @@
     <a href="delete-task.jsp">Delete Task</a>
 </div>
 
-<div class="chart-container" style="width: 30%; margin: auto;">
-    <canvas id="taskPieChart" width="300" height="300"></canvas>
+<div class="chart-container">
+    <canvas id="taskPieChart" width="100" height="100"></canvas>
 </div>
-<div id="totalDuration" style="text-align: center; margin-top: 20px;"></div>
+<div id="totalDuration"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         fetch('GetTaskData')
