@@ -1,4 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.io.IOException" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.PreparedStatement" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="java.sql.Timestamp" %>
+<%@ page import="java.sql.Date" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="javax.servlet.ServletException" %>
+<%@ page import="javax.servlet.annotation.WebServlet" %>
+<%@ page import="javax.servlet.http.HttpServlet" %>
+<%@ page import="javax.servlet.http.HttpServletRequest" %>
+<%@ page import="javax.servlet.http.HttpServletResponse" %>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="javax.servlet.http.HttpSession" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,6 +62,32 @@
     	justify-content:center;
     
     }
+    .list-tasks {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align:center;
+        }
+
+        th, td {
+	        text-align:center;
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 </style>
 </head>
 <body>
@@ -207,5 +250,61 @@
 
     });
 </script>
+<div class="list-tasks">
+        <h2>Today's Tasks</h2>
+        <%
+            String emp_name = (String) session.getAttribute("emp_name");
+            if (emp_name != null) {
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/time_tracker", "root", "keshav610");
+
+                    LocalDate today = LocalDate.now();
+                    
+                    String query = "SELECT task_category, task_description, start_time, end_time FROM task_table WHERE emp_name = ? AND task_date = ?";
+                    PreparedStatement pst = con.prepareStatement(query);
+                    pst.setString(1, emp_name);
+                    pst.setDate(2, java.sql.Date.valueOf(today));
+
+                    // Execute query
+                    ResultSet rs = pst.executeQuery();
+        %>
+        <table>
+            <tr>
+                <th>Task Name</th>
+                <th>Description</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+            </tr>
+            <%
+                    // Iterate through the result set and display each task
+                    while (rs.next()) {
+                        String taskName = rs.getString("task_category");
+                        String taskDescription = rs.getString("task_description");
+                        String startTime = rs.getTime("start_time").toString();
+                        String endTime = rs.getTime("end_time").toString();
+            %>
+            <tr>
+                <td><%= taskName %></td>
+                <td><%= taskDescription %></td>
+                <td><%= startTime %></td>
+                <td><%= endTime %></td>
+            </tr>
+            <%
+                    }
+                    // Close resources
+                    rs.close();
+                    pst.close();
+                    con.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                out.println("<p>No employee ID found in session.</p>");
+            }
+        %>
+        </table>
+    </div>
+
 </body>
 </html>

@@ -50,7 +50,7 @@
             border-radius: 5px;
         }
         form input[type="submit"] {
-            background-color: #4CAF50; /* Green */
+            background-color: #000; 
             color: white;
             border: none;
             padding: 10px 20px;
@@ -58,7 +58,7 @@
             cursor: pointer;
         }
         form input[type="submit"]:hover {
-            background-color: #45a049;
+            background-color: #303330;
         }
         table {
             width: 90%;
