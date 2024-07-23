@@ -81,6 +81,7 @@
         }
 
         th {
+        	text-align:center;
             background-color: #343a40;
             color: #ffffff;
         }

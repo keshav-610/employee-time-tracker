@@ -6,7 +6,10 @@
 <title>Login</title>
 <style>
     body {
-        font-family: Arial, sans-serif;
+    	font-family: "DM Sans", sans-serif;
+ 		font-optical-sizing: auto;
+  		font-weight: 600;
+  		font-style: normal;
         background-color: #f0f2f5;
         margin: 0;
         padding: 0;
@@ -23,16 +26,16 @@
         text-align: center;
     }
     .header{
-    	display:flex;
-    	justify-content:space-evenly;
-    	width:100%;
+        display: flex;
+        justify-content: space-evenly;
+        width: 100%;
     }
     h2 a{
-    	text-decoration:none;
-    	color: #007BFF;
+        text-decoration: none;
+        color: #007BFF;
     }
     h2 a:hover{
-    	color: #0056b3;
+        color: #0056b3;
     }
     .form-container {
         background-color: #ffffff;
@@ -54,6 +57,10 @@
     }
     form input[type="text"],
     form input[type="password"] {
+    	font-family: "DM Sans", sans-serif;
+ 		font-optical-sizing: auto;
+  		font-weight: 600;
+  		font-style: normal;
         width: calc(100% - 20px);
         padding: 10px;
         margin-bottom: 15px;
@@ -81,18 +88,18 @@
 </style>
 </head>
 <body>
-	<div class="header">
-	<h2><a href="employee.jsp">Sign Up</a></h2>
-    <h2>Login</h2>
-	</div>
+    <div class="header">
+        <h2><a href="employee.jsp">Sign Up</a></h2>
+        <h2>Login</h2>
+    </div>
     <div class="form-container get_emp_id">
         <h2>Get Employee ID</h2>
         <form action="get_employee_detail" method="post">
             <label for="phone_number">Phone Number</label>
-            <input type="text" name="phone_number" required/><br>
+            <input type="text" name="phone_number" autocomplete="off" required/><br>
             
             <label for="password">Password</label>
-            <input type="password" name="password" required/><br>
+            <input type="password" name="password" autocomplete="off" required/><br>
             
             <input type="submit" value="Get"/>
         </form>
@@ -109,10 +116,10 @@
         <h2>Account Login</h2>
         <form action="login" method="post">
             <label for="employee-id">Enter your Employee ID</label>
-            <input type="text"name="employee-id" required/><br>       
+            <input type="text" name="employee-id" autocomplete="off" required/><br>       
             
             <label for="employee-password">Enter your Account Password</label>
-            <input type="password" name="employee-password" required/><br>
+            <input type="password" name="employee-password" autocomplete="off" required/><br>
             
             <input type="submit" value="Login"/>
         </form>

@@ -99,6 +99,26 @@
     tr:nth-child(even) {
         background-color: #f2f2f2;
     }
+    .piechart{
+    	height:500px;
+    	width:500px;
+    }   
+    .operation{
+    	display:flex;
+    	justify-content:space-evenly;
+    	width:100%;	
+    } 
+    .operation a{
+    	font-size:15px;	
+    	background-color:#007bff;
+    	color:white;
+    	padding:12px;
+    	text-decoration:none;
+    	border-radius:10px;
+    }
+    .operation a:hover{
+    	background-color: #0056b3;
+    }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -181,12 +201,13 @@
     </div>
 
 <h2>Employee Work Duration Pie Chart</h2>
-<canvas id="myPieChart" width="400" height="400"></canvas>
+<div class="piechart"><canvas id="myPieChart"></canvas></div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         fetch('GetEmployeeDurationsServlet')
             .then(response => response.json())
             .then(data => {
+                console.log("Data fetched: ", data); 
                 const ctx = document.getElementById('myPieChart').getContext('2d');
                 new Chart(ctx, {
                     type: 'pie',
@@ -215,7 +236,8 @@
                         }]
                     },
                     options: {
-                        responsive: true,
+                        responsive: true, 
+                        aspectRatio: 1,
                         plugins: {
                             legend: {
                                 position: 'top',
