@@ -18,10 +18,10 @@
         height: 100vh;
         color: #333;
     }
-    .header{
-    	display:flex;
-    	justify-content:space-evenly;
-    	width:100%;
+    .header {
+        display: flex;
+        justify-content: space-evenly;
+        width: 100%;
     }
     h2 {
         font-size: 2em;
@@ -49,9 +49,15 @@
         margin-bottom: 8px;
         font-weight: bold;
     }
+    form input[type="number"]{
+    	width: calc(100% - 22px);
+    	padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px; 
+    }
     form input[type="text"],
-    form input[type="email"],
-    form input[type="password"] {
+    form input[type="email"] {
         width: calc(100% - 22px);
         padding: 10px;
         margin-bottom: 15px;
@@ -71,35 +77,30 @@
     form input[type="submit"]:hover {
         background-color: #2f302f;
     }
-
 </style>
 </head>
 <body>
-	<div class="header">
-	<h2>Sign Up</h2>
-	<h2><a href="login.jsp">Login</a></h2>
-	</div>
-	<form action="register" method="post">
-		<label>Name</label>
-		<input type="text" name="name"/><br><br>
-		
-		<label>Age</label>
-		<input type="text" name="age"/><br><br>
-		
-		<label>Role</label>
-		<input type="text" name="employee_role"><br><br>
-		
-		<label>Phone Number</label>
-		<input type="text" name="phone_number"/><br><br>
-		
-		<label>Email</label>
-		<input type="email" name="email"/><br><br>
-		
-		<label>Temporary Password</label>
-		<input type="password" name="password"><br><br>
-		
-		<input type="submit" value="Register"/>
-		
-	</form>
+    <div class="header">
+        <h2>Sign Up</h2>
+        <h2><a href="login.jsp">Login</a></h2>
+    </div>
+    <form action="register" method="post">
+        <label>Name</label>
+        <input type="text" name="name" required /><br><br>
+        
+        <label>Age</label>
+        <input type="number" name="age" required /><br><br>
+        
+        <label>Role</label>
+        <input type="text" name="employee_role" required /><br><br>
+        
+        <label>Phone Number</label>
+        <input type="text" name="phone_number" required /><br><br>
+        
+        <label>Email</label>
+        <input type="email" name="email" required /><br><br>
+        
+        <input type="submit" value="Register"/>
+    </form>
 </body>
 </html>
