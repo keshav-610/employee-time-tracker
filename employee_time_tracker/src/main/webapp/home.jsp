@@ -15,7 +15,6 @@
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="javax.servlet.http.HttpSession" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +33,14 @@
         color: #ffffff;
         padding: 10px;
         text-align: center;
+        position: relative;
+    }
+
+    .header .time {
+        position: absolute;
+        top: 30px;
+        right: 20px;
+        font-size: 1em;
     }
 
     .operation {
@@ -57,49 +64,67 @@
         text-align: center;
         margin-top: 20px;
     }
-    .graph_and_pie{
-    	display:flex;
-    	justify-content:center;
     
+    .graph_and_pie {
+        display: flex;
+        justify-content: center;
     }
+    
     .list-tasks {
-            margin-top: 20px;
-        }
+        margin-top: 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            text-align:center;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        text-align: center;
+    }
 
-        th, td {
-	        text-align:center;
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
+    th, td {
+        text-align: center;
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
 
-        th {
-        	text-align:center;
-            background-color: #343a40;
-            color: #ffffff;
-        }
+    th {
+        text-align: center;
+        background-color: #343a40;
+        color: #ffffff;
+    }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 </style>
 </head>
 <body>
 <div class="header">
-    <% String employee_name = (String) session.getAttribute("emp_name");
-    if(employee_name != null) {
+    <% 
+    String employee_name = (String) session.getAttribute("emp_name");
+    if (employee_name != null) {
         out.println("<h2>Welcome, " + employee_name + "</h2>");
     } else {
         out.println("Username not found");
     }
     %>
+    <div class="time">
+        <script>
+            function updateTime() {
+                var now = new Date();
+                var hours = String(now.getHours()).padStart(2, '0');
+                var minutes = String(now.getMinutes()).padStart(2, '0');
+                var seconds = String(now.getSeconds()).padStart(2, '0');
+                var timeString = hours + ':' + minutes + ':' + seconds;
+                document.getElementById('current-time').textContent = timeString;
+            }
+
+            setInterval(updateTime, 1000);
+            window.onload = updateTime;  
+        </script>
+        <span id="current-time"></span>
+    </div>
 </div>
 <div class="operation">
     <a href="add-task.jsp">Add Task</a>
@@ -108,12 +133,12 @@
 </div>
 
 <div class="graph_and_pie">
-<div class="chart-container">
-    <canvas id="taskPieChart" width="200" height="200"></canvas>
-</div>
-<div class="chart-container">
-    <canvas id="taskBarChart" width="300" height="200"></canvas>
-</div>
+    <div class="chart-container">
+        <canvas id="taskPieChart" width="200" height="200"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="taskBarChart" width="300" height="200"></canvas>
+    </div>
 </div>
 <div id="totalDuration"></div>
 
@@ -252,60 +277,57 @@
     });
 </script>
 <div class="list-tasks">
-        <h2>Today's Tasks</h2>
+    <h2>Today's Tasks</h2>
+    <%
+        String emp_name = (String) session.getAttribute("emp_name");
+        if (emp_name != null) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/time_tracker", "root", "keshav610");
+
+                LocalDate today = LocalDate.now();
+                
+                String query = "SELECT task_category, task_description, start_time, end_time FROM task_table WHERE emp_name = ? AND task_date = ?";
+                PreparedStatement pst = con.prepareStatement(query);
+                pst.setString(1, emp_name);
+                pst.setDate(2, java.sql.Date.valueOf(today));
+
+                ResultSet rs = pst.executeQuery();
+    %>
+    <table>
+        <tr>
+            <th>Task Name</th>
+            <th>Description</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
         <%
-            String emp_name = (String) session.getAttribute("emp_name");
-            if (emp_name != null) {
-                try {
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/time_tracker", "root", "keshav610");
-
-                    LocalDate today = LocalDate.now();
-                    
-                    String query = "SELECT task_category, task_description, start_time, end_time FROM task_table WHERE emp_name = ? AND task_date = ?";
-                    PreparedStatement pst = con.prepareStatement(query);
-                    pst.setString(1, emp_name);
-                    pst.setDate(2, java.sql.Date.valueOf(today));
-
-                    // Execute query
-                    ResultSet rs = pst.executeQuery();
+                while (rs.next()) {
+                    String taskName = rs.getString("task_category");
+                    String taskDescription = rs.getString("task_description");
+                    String startTime = rs.getTime("start_time").toString();
+                    String endTime = rs.getTime("end_time").toString();
         %>
-        <table>
-            <tr>
-                <th>Task Name</th>
-                <th>Description</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-            </tr>
-            <%
-                    // Iterate through the result set and display each task
-                    while (rs.next()) {
-                        String taskName = rs.getString("task_category");
-                        String taskDescription = rs.getString("task_description");
-                        String startTime = rs.getTime("start_time").toString();
-                        String endTime = rs.getTime("end_time").toString();
-            %>
-            <tr>
-                <td><%= taskName %></td>
-                <td><%= taskDescription %></td>
-                <td><%= startTime %></td>
-                <td><%= endTime %></td>
-            </tr>
-            <%
-                    }
-                    // Close resources
-                    rs.close();
-                    pst.close();
-                    con.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+        <tr>
+            <td><%= taskName %></td>
+            <td><%= taskDescription %></td>
+            <td><%= startTime %></td>
+            <td><%= endTime %></td>
+        </tr>
+        <%
                 }
-            } else {
-                out.println("<p>No employee ID found in session.</p>");
+                rs.close();
+                pst.close();
+                con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        %>
-        </table>
-    </div>
+        } else {
+            out.println("<p>No employee ID found in session.</p>");
+        }
+    %>
+    </table>
+</div>
 
 </body>
 </html>

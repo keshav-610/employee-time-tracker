@@ -6,10 +6,10 @@
 <title>Login</title>
 <style>
     body {
-    	font-family: "DM Sans", sans-serif;
- 		font-optical-sizing: auto;
-  		font-weight: 600;
-  		font-style: normal;
+        font-family: "DM Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
         background-color: #f0f2f5;
         margin: 0;
         padding: 0;
@@ -20,21 +20,28 @@
         min-height: 100vh;
         color: #333;
     }
-    h2 {
-        font-size: 2em;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-    .header{
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: space-evenly;
-        width: 100%;
+        align-items: center;
+        z-index: 1000; 
     }
-    h2 a{
+    .header h2 {
+        margin: 0;
+        font-size: 2em;
+    }
+    .header h2 a {
         text-decoration: none;
         color: #007BFF;
     }
-    h2 a:hover{
+    .header h2 a:hover {
         color: #0056b3;
     }
     .form-container {
@@ -44,28 +51,30 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         width: 80%;
         max-width: 400px;
-        margin-bottom: 30px;
+        margin-top: 100px;
     }
     .form-container h2 {
         font-size: 1.5em;
         margin-bottom: 15px;
+        color: #333;
     }
     form label {
         display: block;
         margin-bottom: 8px;
         font-weight: bold;
+        color: #333;
     }
     form input[type="text"],
     form input[type="password"] {
-    	font-family: "DM Sans", sans-serif;
- 		font-optical-sizing: auto;
-  		font-weight: 600;
-  		font-style: normal;
         width: calc(100% - 20px);
         padding: 10px;
         margin-bottom: 15px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        font-family: "DM Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
     }
     form input[type="submit"] {
         width: 100%;
@@ -76,14 +85,16 @@
         border-radius: 5px;
         cursor: pointer;
         font-size: 1em;
+        transition: background-color 0.3s ease;
     }
     form input[type="submit"]:hover {
-        background-color: #2f302f;
+        background-color: #333;
     }
     p {
         text-align: center;
         font-size: 1em;
         margin-top: 10px;
+        color: #666;
     }
 </style>
 </head>
@@ -92,34 +103,14 @@
         <h2><a href="employee.jsp">Sign Up</a></h2>
         <h2>Login</h2>
     </div>
-    <div class="form-container get_emp_id">
-        <h2>Get Employee ID</h2>
-        <form action="get_employee_detail" method="post">
-            <label for="phone_number">Phone Number</label>
-            <input type="text" name="phone_number" autocomplete="off" required/><br>
-            
-            <label for="password">Password</label>
-            <input type="password" name="password" autocomplete="off" required/><br>
-            
-            <input type="submit" value="Get"/>
-        </form>
-        <%
-            String emp_id = (String) request.getAttribute("emp_id");
-            String emp_password = (String) request.getAttribute("emp_password");
-            if (emp_id != null && emp_password != null) {
-                out.println("<p>Your Employee ID: " + emp_id + "</p>");
-                out.println("<p>Your Employee Password: " + emp_password + "</p>");
-            }
-        %>
-    </div>
     <div class="form-container account-login">
         <h2>Account Login</h2>
         <form action="login" method="post">
             <label for="employee-id">Enter your Employee ID</label>
-            <input type="text" name="employee-id" autocomplete="off" required/><br>       
-            
+            <input type="text" id="employee-id" name="employee-id" autocomplete="off" required/><br>       
+                        
             <label for="employee-password">Enter your Account Password</label>
-            <input type="password" name="employee-password" autocomplete="off" required/><br>
+            <input type="password" id="employee-password" name="employee-password" autocomplete="off" required/><br>
             
             <input type="submit" value="Login"/>
         </form>

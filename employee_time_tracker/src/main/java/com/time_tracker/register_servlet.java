@@ -5,9 +5,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.Random;
-import javax.activation.*;
-import javax.servlet.RequestDispatcher;
+import javax.mail.*;
+import javax.mail.internet.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,8 +20,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class register_servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    // Define a fixed salt
-    private static final String FIXED_SALT = "$2a$10$ABCDEFGHIJKLMNOPQRSTUV"; 
+    private static final String FIXED_SALT = "$2a$10$ABCDEFGHIJKLMNOPQRSTUV";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String emp_name = request.getParameter("name");
@@ -44,16 +44,19 @@ public class register_servlet extends HttpServlet {
             return;
         }
 
+        if (phone_number == null || phone_number.length() != 10) {
+            request.setAttribute("status", "Phone number must be 10 digits.");
+            request.getRequestDispatcher("employee.jsp").forward(request, response);
+            return;
+        }
+
         int emp_id = generateEmployeeId();
         String emp_password = generateEmployeePassword();
 
-        // Hash the password using the fixed salt
         String hashedPassword = BCrypt.hashpw(emp_password, FIXED_SALT);
 
-        RequestDispatcher dispatcher = null;
         Connection con1 = null;
         PreparedStatement pst = null;
-
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/time_tracker", "root", "keshav610");
@@ -68,19 +71,23 @@ public class register_servlet extends HttpServlet {
             pst.setString(7, hashedPassword);
 
             int rowcount = pst.executeUpdate();
-            dispatcher = request.getRequestDispatcher("login.jsp");
             if (rowcount > 0) {
-                request.setAttribute("status", "success");
+                try {
+                    sendEmail(email, emp_id, emp_password);
+                    request.setAttribute("status", "Registration successful. Check your email for details.");
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                    request.setAttribute("status", "Email send failed: " + e.getMessage());
+                }
             } else {
-                request.setAttribute("status", "failed");
+                request.setAttribute("status", "Registration failed.");
             }
-            dispatcher.forward(request, response);
+            request.getRequestDispatcher("employee.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("status", "exception: " + e.getMessage());
-            dispatcher = request.getRequestDispatcher("employee.jsp");
-            dispatcher.forward(request, response);
+            request.setAttribute("status", "Exception: " + e.getMessage());
+            request.getRequestDispatcher("employee.jsp").forward(request, response);
         } finally {
             if (pst != null) {
                 try {
@@ -105,5 +112,39 @@ public class register_servlet extends HttpServlet {
 
     private String generateEmployeePassword() {
         return String.valueOf(new Random().nextInt(999999));
+    }
+
+    private void sendEmail(String toAddress, int emp_id, String emp_password) throws MessagingException {
+        final String username = "kesavaprakash1610@gmail.com";
+        final String password = "duyu mpdi lxuj myvk";
+        final String smtpHost = "smtp.gmail.com";
+        final String smtpPort = "587";
+
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", smtpHost);
+        properties.put("mail.smtp.port", smtpPort);
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
+        message.setSubject("Your Employee Details");
+        message.setText("Dear Employee,\n\n" +
+                        "Your account has been successfully registered.\n\n" +
+                        "Employee Account ID: " + emp_id + "\n" +
+                        "Employee Temporary Password: " + emp_password + "\n" +
+                        "Please don't use your temporary password for login purposes.\n" +
+                        "Please activate your account by setting a new PIN.\n\n" +
+                        "Best Regards,\nCorporate");
+
+        Transport.send(message);
     }
 }

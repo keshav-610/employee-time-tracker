@@ -49,9 +49,9 @@
         margin-bottom: 8px;
         font-weight: bold;
     }
-    form input[type="number"]{
-    	width: calc(100% - 22px);
-    	padding: 10px;
+    form input[type="number"] {
+        width: calc(100% - 22px);
+        padding: 10px;
         margin-bottom: 15px;
         border: 1px solid #ccc;
         border-radius: 5px; 
@@ -77,6 +77,20 @@
     form input[type="submit"]:hover {
         background-color: #2f302f;
     }
+    .status-message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    .status-success {
+        color: #28a745;
+        background-color: #d4edda;
+    }
+    .status-error {
+        color: #dc3545;
+        background-color: #f8d7da;
+    }
 </style>
 </head>
 <body>
@@ -96,6 +110,19 @@
         
         <label>Phone Number</label>
         <input type="text" name="phone_number" required /><br><br>
+        
+        <!-- Display status message here -->
+        <% 
+            String status = (String) request.getAttribute("status");
+            if (status != null && !status.isEmpty()) {
+                String statusClass = status.contains("Exception") ? "status-error" : "status-success";
+        %>
+            <div class="status-message <%= statusClass %>">
+                <%= status %>
+            </div>
+        <% 
+            } 
+        %>
         
         <label>Email</label>
         <input type="email" name="email" required /><br><br>
