@@ -142,7 +142,6 @@
         }
         %>
 
-        <!-- Form to get specific task by task_id -->
         <h2>Get Specific Task</h2>
         <form method="post" action="edit-task.jsp">
             <label for="task_id">Enter Task ID:</label>
@@ -168,10 +167,10 @@
         <form method="post" action="update_task">
             <input type="hidden" name="task_id" value="<%= rs.getInt("task_id") %>" required/>
             <label for="emp_id">Employee ID:</label>
-            <input type="text" name="emp_id" value="<%= rs.getString("emp_id") %>" required/><br/><br/>
+            <input type="text" name="emp_id" value="<%= rs.getString("emp_id") %>"  readonly required/><br/><br/>
             
             <label for="emp_name">Employee Name:</label>
-            <input type="text" name="emp_name" value="<%= rs.getString("emp_name") %>" required/><br/><br/>
+            <input type="text" name="emp_name" value="<%= rs.getString("emp_name") %>" readonly required/><br/><br/>
             
             <label for="project_name">Project Name:</label>
             <input type="text" name="project_name" value="<%= rs.getString("project_name") %>" required/><br/><br/>

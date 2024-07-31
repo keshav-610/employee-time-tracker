@@ -1,20 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.io.IOException" %>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.DriverManager" %>
-<%@ page import="java.sql.PreparedStatement" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="java.sql.Timestamp" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="javax.servlet.ServletException" %>
-<%@ page import="javax.servlet.annotation.WebServlet" %>
-<%@ page import="javax.servlet.http.HttpServlet" %>
-<%@ page import="javax.servlet.http.HttpServletRequest" %>
-<%@ page import="javax.servlet.http.HttpServletResponse" %>
-<%@ page import="javax.servlet.http.HttpSession" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.sql.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -90,7 +76,7 @@
     th, td {
         border: 1px solid #dee2e6;
         padding: 8px;
-        text-align: left;
+        text-align:center;
     }
     th {
         background-color: #343a40;
@@ -148,12 +134,14 @@
             <label for="email">Email</label>
             <input type="email" name="email" placeholder="Enter email" required/>
         </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="password" placeholder="Enter password" required/>
-        </div>
         <input type="submit" value="Add Employee"/>
     </form>
+    <%
+        String status = request.getParameter("status");
+        if (status != null) {
+            out.print("Status: " + status);
+        }
+    %>
 </div><br/><br/>
 <div class="operation">
 	<a href="admin_edit_employee.jsp">Edit Employee Details</a>
@@ -180,9 +168,9 @@
                 while(rs.next()){
                     %>
                     <tr>
-                        <td><%=rs.getString("emp_id") %></td>
+                        <td><%=rs.getInt("emp_id") %></td>
                         <td><%=rs.getString("emp_name") %></td>
-                        <td><%=rs.getString("age") %></td>
+                        <td><%=rs.getInt("age") %></td>
                         <td><%=rs.getString("role") %></td>
                         <td><%=rs.getString("phone_number") %></td>
                         <td><%=rs.getString("email") %></td>

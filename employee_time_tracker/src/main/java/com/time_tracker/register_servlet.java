@@ -140,7 +140,7 @@ public class register_servlet extends HttpServlet {
         message.setText("Dear Employee,\n\n" +
                         "Your account has been successfully registered.\n\n" +
                         "Employee Account ID: " + emp_id + "\n" +
-                        "Employee Temporary Password: " + emp_password + "\n" +
+                        "Employee Password: " + emp_password + "\n" +
                         "Please don't use your temporary password for login purposes.\n" +
                         "Please activate your account by setting a new PIN.\n\n" +
                         "Best Regards,\nCorporate");
